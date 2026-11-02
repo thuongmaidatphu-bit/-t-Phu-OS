@@ -1,0 +1,42 @@
+{
+  "name": "Gọi Thợ Tuy Hòa, Tìm Cửa Hàng Quanh Đây",
+  "short_name": "Gọi Thợ 78",
+  "description": "Tổng đài điều phối thợ kỹ thuật có mặt 15 phút & Tìm cửa hàng vật tư quanh đây tại TP. Tuy Hòa, Phú Yên",
+  "start_url": "./goi_tho_6k.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#1E40AF",
+  "orientation": "portrait-primary",
+  "categories": ["utilities", "lifestyle", "business"],
+  "icons": [
+    {
+      "src": "./logo_datphu.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo_datphu.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gọi Thợ Khẩn Cấp 15P",
+      "short_name": "Gọi Thợ",
+      "description": "Gọi thợ kỹ thuật điện nước, điện lạnh, xe máy đến nhà",
+      "url": "./goi_tho_6k.html#sectionDemandIntakeForm",
+      "icons": [{ "src": "./logo_datphu.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Tìm Cửa Hàng Quanh Đây",
+      "short_name": "Tìm Tiệm",
+      "description": "Quét các tiệm vật tư điện nước kim khí gần nhất (2.5km)",
+      "url": "./goi_tho_6k.html#storeDiscoverySection",
+      "icons": [{ "src": "./logo_datphu.jpg", "sizes": "192x192" }]
+    }
+  ]
+}

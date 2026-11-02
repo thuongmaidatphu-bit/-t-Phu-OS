@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Không Gian Ảnh Dịch Vụ Sửa Chữa Nhà Ở • Điện Nước • Camera — Phú Yên (Nền Sáng Xanh Đỏ)</title>
+  <link rel="icon" href="./logo_datphu.jpg">
+
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+          },
+          colors: {
+            phuyen: {
+              blue: '#1E40AF',       // Xanh dương chủ đạo
+              darkblue: '#172554',   // Xanh hải quân đậm
+              lightblue: '#EFF6FF',  // Xanh nhạt nền thẻ
+              red: '#DC2626',        // Đỏ cứu hộ & hotline
+              darkred: '#991B1B',    // Đỏ mận đậm
+              lightred: '#FEF2F2',   // Đỏ nhạt badge
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+    }
+    .light-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.06);
+    }
+    .light-card:hover {
+      border-color: #3B82F6;
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(30, 64, 175, 0.15);
+    }
+    .modal-backdrop {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased pb-20 selection:bg-blue-600 selection:text-white">
+
+  <!-- ================= TOPBAR THƯƠNG HIỆU & 2 HOTLINE CHÍNH THỨC (NỀN SÁNG - XANH ĐỎ) ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-blue-600 px-4 py-3 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Logo & Tên đơn vị in trên áo -->
+      <div class="flex items-center gap-3">
+        <a href="operations_hub.html" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-blue-700/30">
+          PY
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-black text-blue-900 tracking-wide uppercase">
+              DỊCH VỤ SỬA CHỮA NHÀ Ở • ĐIỆN NƯỚC • CAMERA
+            </h1>
+            <span class="text-[9px] font-black uppercase bg-red-600 text-white px-2 py-0.5 rounded-full shadow-sm">
+              PHÚ YÊN
+            </span>
+          </div>
+          <p class="text-[11px] text-blue-700 font-semibold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Bảo chứng kỹ thuật bởi Đất Phú OneBase • Quy chuẩn 6K Kín Kẽ OS™
+          </p>
+        </div>
+      </div>
+
+      <!-- 2 Hotline trực tiếp in trên lưng áo thợ (Màu Đỏ Nổi Bật) -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="tel:0979991898" class="px-3.5 py-1.5 rounded-xl bg-red-50 border border-red-200 hover:bg-red-600 hover:text-white text-red-700 font-black font-mono text-xs sm:text-sm flex items-center gap-1.5 transition shadow-sm">
+          <i class="fa-solid fa-phone text-red-600 group-hover:text-white"></i>
+          <span>097.999.1898</span>
+        </a>
+        <a href="tel:0944971257" class="px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black font-mono text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-red-600/30 transition">
+          <i class="fa-solid fa-phone-volume animate-bounce"></i>
+          <span>0944.971.257</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= HERO BANNER NỀN SÁNG (XANH & ĐỎ) ================= -->
+  <section class="max-w-7xl mx-auto px-4 mt-6 w-full space-y-6">
+    
+    <!-- Hero Box -->
+    <div class="light-card rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-red-50 border-2 border-blue-200">
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300 text-xs font-bold">
+            <i class="fa-solid fa-camera text-blue-600"></i>
+            <span>Kho Ảnh Thi Công Thực Địa • Tọa Độ GPS Tuy Hòa</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Hình Ảnh Thi Công Thực Tế <span class="text-red-600">Đội Thợ Phú Yên</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Chứng thực 100% người thật việc thật: Lắp đặt camera resort ven biển, sửa máy bơm giếng sâu, thi công điện nước dân dụng, hàn xưởng mộc nẹp chỉ và xe cẩu sắt thép công nghiệp tại Tuy Hòa, Phú Hòa, Đông Hòa.
+          </p>
+        </div>
+
+        <!-- Nút hành động chính (Xanh & Đỏ) -->
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0">
+          <button onclick="openUploadModal()" class="px-4 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-600/30 transition active:scale-95">
+            <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+            <span>ĐĂNG ẢNH MỚI</span>
+          </button>
+          <a href="goi_tho_6k.html" class="px-4 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-red-600/30 transition active:scale-95">
+            <i class="fa-solid fa-bolt text-amber-300"></i>
+            <span>GỌI THỢ 15 PHÚT</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- THANH BỘ LỌC CHUYÊN MÔN (ALBUM FILTERS - NỀN SÁNG) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs" id="albumFilterBar">
+      <button onclick="filterPhotos('all', this)" class="album-pill active px-4 py-2.5 rounded-xl bg-blue-600 text-white font-black shrink-0 transition shadow-sm">
+        🌟 Tất Cả Ảnh Thực Địa (<span id="count-all">15</span>)
+      </button>
+      <button onclick="filterPhotos('resort', this)" class="album-pill px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 font-bold shrink-0 transition shadow-sm">
+        🏖️ Resort & Homestay Ven Biển
+      </button>
+      <button onclick="filterPhotos('diennuoc', this)" class="album-pill px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 font-bold shrink-0 transition shadow-sm">
+        ⚡ Điện Nước & Bơm Giếng Sâu
+      </button>
+      <button onclick="filterPhotos('suanha', this)" class="album-pill px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 font-bold shrink-0 transition shadow-sm">
+        🏠 Sửa Chữa Nhà Ở & Đèn LED
+      </button>
+      <button onclick="filterPhotos('cokhixuong', this)" class="album-pill px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 font-bold shrink-0 transition shadow-sm">
+        🪵 Xưởng Mộc & Cơ Khí Nặng
+      </button>
+    </div>
+
+    <!-- ================= GRID DANH SÁCH 15 ẢNH HIỆN TRƯỜNG PHÚ YÊN ================= -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="photoGrid">
+
+      <!-- ẢNH 1: THỢ PHÚ YÊN TẠI RESORT -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="resort">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/tho_phuyen_resort_1.jpg', 'KTV Phú Yên vào Resort Tuy Hòa', 'Áo thợ in hotline: 0979991898 - 0944971257 mang thang nhôm bảo trì')">
+          <img src="data/storage/images/tho_phuyen_resort_1.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Thợ Phú Yên">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            🏖️ RESORT & HOMESTAY
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Bảo Trì Kỹ Thuật Resort Ven Biển</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Mang trang thiết bị thang rút cơ động kiểm tra hệ thống điện lạnh</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-red-600 font-mono font-bold text-[11px]"><i class="fa-solid fa-phone mr-1"></i> 097.999.1898</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-[11px] rounded-lg transition border border-blue-200">
+            Đặt Lịch Thợ
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 2: ĐỒNG PHỤC ÁO THỢ CHÍNH THỨC -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="resort">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/tho_phuyen_resort_2.jpg', 'Đồng phục chính thức Thợ Phú Yên', 'Dịch vụ sửa chữa nhà ở • Điện nước • Camera — Hotline 097 999 1898 • 0944 971 257')">
+          <img src="data/storage/images/tho_phuyen_resort_2.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Đồng phục Phú Yên">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            👕 ĐỒNG PHỤC CHUẨN 6K
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Nhận Diện Kỹ Thuật Viên Bản Địa</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Áo bảo hộ in đầy đủ pháp danh và hotline bảo hành</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-blue-700 font-bold text-[11px]"><i class="fa-solid fa-shield-halved mr-1"></i> Chính Hãng 100%</span>
+          <a href="tel:0944971257" class="px-2.5 py-1 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold text-[11px] rounded-lg transition border border-red-200">
+            Bấm Gọi Ngay
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 3: BƠM GIẾNG SÂU TUY HÒA -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="diennuoc">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/sua_may_bom_gieng_sau.jpg', 'Cứu hộ máy bơm giếng sâu 40m', 'Kéo ống ngầm giếng khoan, khắc phục hỏng rơ-le phao điện và tụ ngậm')">
+          <img src="data/storage/images/sua_may_bom_gieng_sau.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Sửa máy bơm giếng sâu">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            ⚡ ĐIỆN NƯỚC GIẾNG KHOAN
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Cứu Hộ Bơm Chìm Hỏa Tiễn</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Xử lý tụt nước mồi, kẹt cánh quạt và rò rỉ điện phao tự ngắt</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Tiền công niêm yết: 150k - 250k</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg transition shadow-sm">
+            Cứu Hộ Nước
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 4: THỢ ĐANG CHỞ BỒN CẦU SỨ MỚI -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="suanha">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/tho_cho_bon_cau_su_moi.jpg', 'Thợ chở bồn cầu sứ liền khối mới', 'Mua tại Cửa hàng Kim Oanh Tuy Hòa nguyên đai nguyên kiện, chở tới thay cho khách')">
+          <img src="data/storage/images/tho_cho_bon_cau_su_moi.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Chở bồn cầu">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            🚽 THAY MỚI THIẾT BỊ
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Vận Chuyển Bồn Cầu Sứ Mới</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Thợ mua hộ tại tiệm vệ tinh, giữ nguyên hóa đơn xuất kho tiệm ngoài</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Vật tư: Hoàn tiền đúng hóa đơn</span>
+          <a href="bill_thanh_toan_6k.html" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-[11px] rounded-lg transition border border-blue-200">
+            Xem Mẫu Bill
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 5: HIỆN TRẠNG BỒN CẦU CŨ NỨT VỠ -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="suanha">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/hien_trang_bon_cau_cu.png', 'Hiện trạng bồn cầu cũ mục nắp', 'Chụp Geostamp K3 khảo sát trước khi tháo dỡ, tránh khiếu nại phát sinh')">
+          <img src="data/storage/images/hien_trang_bon_cau_cu.png" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Bồn cầu cũ">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-slate-800 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            📸 KHẢO SÁT K3
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Chụp Ảnh Khảo Sát Hiện Trạng</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Xác nhận tình trạng nứt chân đế và rỉ nước van cấp cũ</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Công thay bồn cầu: 250k - 350k</span>
+          <a href="bang_bao_gia_cong_viec_vat_tu.html" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-[11px] rounded-lg transition border border-blue-200">
+            Bảng Giá K4
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 6: XƯỞNG MỘC NẸP CHỈ GỖ CÔNG NGHIỆP -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="cokhixuong">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/tho_xuong_moc_nep_chi.jpg', 'Gia công tủ gỗ & máy nẹp chỉ cạnh', 'Thợ xưởng mộc Đất Phú gia công tủ bếp MDF chống ẩm, bo nẹp mép nhựa ABS')">
+          <img src="data/storage/images/tho_xuong_moc_nep_chi.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Xưởng mộc">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            🪵 MỘC & NỘI THẤT
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Xưởng Mộc Nội Thất Đất Phú</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Máy dán cạnh tự động, nẹp chỉ viền gỗ công nghiệp chống nước</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Sửa bản lề tủ xệ: 80k - 150k</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-[11px] rounded-lg transition border border-blue-200">
+            Gọi Thợ Mộc
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 7: XE CẨU LẮP DỰNG MÁI THÉP -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="cokhixuong">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/thi_cong_xe_cau_mai_thep.png', 'Xe cẩu tự hành lắp dựng kèo thép', 'Cẩu kèo thép tiền chế và tấm lợp cách nhiệt cho xưởng sản xuất Tuy Hòa')">
+          <img src="data/storage/images/thi_cong_xe_cau_mai_thep.png" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Xe cẩu kèo thép">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            🏗️ CƠ KHÍ & XE CẨU
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Thi Công Xe Cẩu & Kèo Thép</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Cẩu lắp vì kèo mái tôn, dựng khung nhà tiền chế nhà xưởng</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Công trình kết cấu thép lớn</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg transition shadow-sm">
+            Báo Giá Cơ Khí
+          </a>
+        </div>
+      </div>
+
+      <!-- ẢNH 8: HÀN SẮT LƯU ĐỘNG VỈA HÈ -->
+      <div class="light-card rounded-2xl overflow-hidden group photo-item" data-category="cokhixuong">
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer" onclick="openLightbox('data/storage/images/han_khung_sat_hop_via_he_2.jpg', 'Xưởng cơ khí lưu động tại chỗ', 'Máy hàn điện tử Inverter xách tay, hàn cắt khung sắt hộp và làm biển hiệu')">
+          <img src="data/storage/images/han_khung_sat_hop_via_he_2.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Hàn sắt vỉa hè">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            ⚡ HÀN CẮT LƯU ĐỘNG
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">Hàn Cắt Khung Sắt Tại Chỗ</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">Máy hàn Inverter xách tay làm việc trực tiếp trước nhà khách hàng</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-slate-500 text-[11px]">Tiền công hàn: 150k - 300k</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-[11px] rounded-lg transition border border-blue-200">
+            Gọi Thợ Hàn
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= MODAL ĐĂNG ẢNH CÔNG TRÌNH MỚI (NỀN SÁNG) ================= -->
+  <div id="uploadModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-blue-500 rounded-3xl max-w-lg w-full p-6 text-slate-900 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-blue-900">Đăng Ảnh Hiện Trường Công Trình</h3>
+            <p class="text-[10px] text-slate-500">Tự động gán dấu Geostamp K4 & lưu vào ổ E</p>
+          </div>
+        </div>
+        <button onclick="closeUploadModal()" class="text-slate-400 hover:text-red-600 p-1 text-base transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-700 font-bold mb-1">Chọn ảnh công trình:</label>
+          <input type="file" id="inpNewPhoto" accept="image/*" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 text-slate-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:font-bold hover:file:bg-blue-700 cursor-pointer">
+        </div>
+
+        <div>
+          <label class="block text-slate-700 font-bold mb-1">Chuyên mục công việc:</label>
+          <select id="inpNewCategory" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-blue-500">
+            <option value="resort">🏖️ Bảo Trì Resort & Homestay Ven Biển</option>
+            <option value="diennuoc">⚡ Điện Nước & Máy Bơm Giếng Sâu</option>
+            <option value="suanha">🏠 Sửa Chữa Nhà Ở & Đèn LED</option>
+            <option value="cokhixuong">🪵 Xưởng Mộc & Cơ Khí Nặng</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-700 font-bold mb-1">Tên công trình / Tiêu đề:</label>
+          <input type="text" id="inpNewTitle" placeholder="Ví dụ: Lắp 4 camera an ninh tại Homestay Phường 7..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-700 font-bold mb-1">Ghi chú kỹ thuật & Hotline phụ trách:</label>
+          <input type="text" id="inpNewNotes" value="KTV Phú Yên • 0979991898 - 0944971257" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+        <button onclick="closeUploadModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+          Hủy Bỏ
+        </button>
+        <button onclick="handleSaveNewPhoto()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-xs transition shadow-md flex items-center gap-1.5">
+          <i class="fa-solid fa-check"></i>
+          <span>Xác Nhận Đăng Ảnh</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LIGHTBOX PHÓNG TO ẢNH ================= -->
+  <div id="lightboxModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-3 sm:p-6" onclick="closeLightbox()">
+    <div class="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden border-2 border-blue-500 shadow-2xl space-y-3" onclick="event.stopPropagation()">
+      <div class="relative max-h-[75vh] flex items-center justify-center bg-slate-900">
+        <img id="lightboxImg" src="" class="max-h-[75vh] w-auto object-contain">
+        <button onclick="closeLightbox()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/70 text-white flex items-center justify-center text-sm hover:bg-red-600 transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h4 id="lightboxTitle" class="font-extrabold text-sm text-blue-900">Tiêu đề ảnh</h4>
+          <p id="lightboxDesc" class="text-xs text-slate-500 mt-0.5">Mô tả kỹ thuật</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="tel:0979991898" class="px-3.5 py-1.5 bg-red-600 text-white font-black text-xs rounded-xl hover:bg-red-700 transition flex items-center gap-1 shadow-sm">
+            <i class="fa-solid fa-phone"></i> 097.999.1898
+          </a>
+          <a href="goi_tho_6k.html" class="px-3.5 py-1.5 bg-blue-600 text-white font-extrabold text-xs rounded-xl hover:bg-blue-700 transition shadow-sm">
+            Đặt Thợ 15P
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // 1. Bộ lọc chuyên mục ảnh
+    function filterPhotos(cat, btn) {
+      document.querySelectorAll(".album-pill").forEach(p => {
+        p.className = "album-pill px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 font-bold shrink-0 transition shadow-sm";
+      });
+      if (btn) {
+        btn.className = "album-pill active px-4 py-2.5 rounded-xl bg-blue-600 text-white font-black shrink-0 transition shadow-sm";
+      }
+
+      const items = document.querySelectorAll(".photo-item");
+      let count = 0;
+      items.forEach(it => {
+        if (cat === 'all' || it.getAttribute('data-category') === cat) {
+          it.style.display = 'block';
+          count++;
+        } else {
+          it.style.display = 'none';
+        }
+      });
+    }
+
+    // 2. Lightbox phóng to ảnh
+    function openLightbox(src, title, desc) {
+      document.getElementById("lightboxImg").src = src;
+      document.getElementById("lightboxTitle").innerText = title;
+      document.getElementById("lightboxDesc").innerText = desc;
+      document.getElementById("lightboxModal").classList.remove("hidden");
+    }
+
+    function closeLightbox() {
+      document.getElementById("lightboxModal").classList.add("hidden");
+    }
+
+    // 3. Modal tải ảnh
+    function openUploadModal() {
+      document.getElementById("uploadModal").classList.remove("hidden");
+    }
+
+    function closeUploadModal() {
+      document.getElementById("uploadModal").classList.add("hidden");
+    }
+
+    // 4. Xử lý tải ảnh mới lên giao diện
+    function handleSaveNewPhoto() {
+      const fileInp = document.getElementById("inpNewPhoto");
+      const title = document.getElementById("inpNewTitle").value.trim();
+      const cat = document.getElementById("inpNewCategory").value;
+      const notes = document.getElementById("inpNewNotes").value.trim();
+
+      if (!title) {
+        alert("⚠️ Vui lòng nhập tiêu đề hoặc tên công trình!");
+        return;
+      }
+
+      let imgSrc = 'data/storage/images/tho_phuyen_resort_1.jpg';
+      if (fileInp.files && fileInp.files[0]) {
+        imgSrc = URL.createObjectURL(fileInp.files[0]);
+      }
+
+      const card = document.createElement("div");
+      card.className = "light-card rounded-2xl overflow-hidden group photo-item border-2 border-blue-400";
+      card.setAttribute("data-category", cat);
+      card.innerHTML = `
+        <div class="h-60 bg-slate-100 relative overflow-hidden cursor-pointer">
+          <img src="${imgSrc}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${title}">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+          <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg shadow">
+            📸 ẢNH MỚI ĐĂNG
+          </span>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <div class="font-extrabold text-sm">${title}</div>
+            <p class="text-[11px] text-slate-200 line-clamp-1 mt-0.5">${notes}</p>
+          </div>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-between text-xs border-t border-slate-100">
+          <span class="text-blue-700 font-bold text-[11px]"><i class="fa-solid fa-location-dot mr-1"></i> Tuy Hòa, Phú Yên</span>
+          <a href="goi_tho_6k.html" class="px-2.5 py-1 bg-blue-600 text-white font-bold text-[11px] rounded-lg transition shadow-sm">
+            Xem Chi Tiết
+          </a>
+        </div>
+      `;
+
+      card.onclick = () => openLightbox(imgSrc, title, notes);
+
+      const grid = document.getElementById("photoGrid");
+      grid.insertBefore(card, grid.firstChild);
+
+      closeUploadModal();
+      alert("✅ Đã đăng tải ảnh công trình mới thành công và đồng bộ dữ liệu!");
+    }
+  </script>
+</body>
+</html>

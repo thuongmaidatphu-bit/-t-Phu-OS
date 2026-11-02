@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đất Phú 6K - Cổng Điều Hành Chủ Sàn & Gom Đơn Tiện Tuyến</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @keyframes pulseFast {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+    }
+    .pulse-urgent {
+      animation: pulseFast 1.8s infinite;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    @keyframes scan {
+      0% { top: 8%; opacity: 0.8; }
+      50% { top: 85%; opacity: 1; }
+      100% { top: 8%; opacity: 0.8; }
+    }
+    .animate-scan {
+      animation: scan 1.2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen font-sans">
+
+  <!-- ============================================================ -->
+  <!-- MÀN HÌNH KHÓA BẢO MẬT CHỦ SÀN (FLOOR OWNER BIOMETRIC GATE) -->
+  <!-- ============================================================ -->
+  <div id="floorAuthGateScreen" class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-950/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+      
+      <!-- Ambient light effect -->
+      <div class="absolute -top-20 -right-20 w-44 h-44 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-20 -left-20 w-44 h-44 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+
+      <!-- Header -->
+      <div class="text-center space-y-1 relative z-10">
+        <div class="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 via-red-600 to-indigo-600 text-white font-black flex items-center justify-center text-2xl shadow-xl shadow-amber-500/20">
+          <i class="fa-solid fa-fingerprint animate-pulse"></i>
+        </div>
+        <h2 class="text-lg font-black text-white tracking-tight pt-2">CỔNG BẢO MẬT SINH TRẮC HỌC</h2>
+        <div class="text-xs text-amber-400 font-bold uppercase tracking-wider">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</div>
+        <p class="text-[11px] text-slate-400 leading-relaxed pt-1">
+          Xác thực danh tính Chủ Sàn tối cao qua vân tay / Face ID. Hệ thống áp dụng tiêu chuẩn sinh trắc học FIDO2 / WebAuthn.
+        </p>
+      </div>
+
+      <!-- KHU VỰC CẢM BIẾN SINH TRẮC HỌC (BIOMETRIC TOUCH SENSOR PAD) -->
+      <div class="p-6 bg-slate-900/80 border-2 border-amber-500/40 rounded-3xl text-center space-y-4 shadow-inner relative group">
+        
+        <!-- Fingerprint / Face ID Touch Sensor Button -->
+        <button type="button" onclick="startBiometricAuth()" class="relative mx-auto w-28 h-28 rounded-full bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-400/80 flex items-center justify-center text-amber-400 text-4xl shadow-2xl shadow-amber-500/30 group-hover:scale-105 active:scale-95 transition-all cursor-pointer">
+          <span class="absolute inset-0 rounded-full border border-amber-400/30 animate-ping"></span>
+          <i class="fa-solid fa-fingerprint" id="biometricSensorIcon"></i>
+          
+          <!-- Laser Scan Line Effect -->
+          <div id="laserScanBar" class="hidden absolute left-2 right-2 h-1 bg-gradient-to-r from-transparent via-amber-300 to-transparent shadow-lg shadow-amber-400 top-2 animate-scan"></div>
+        </button>
+
+        <div class="space-y-1">
+          <div class="text-xs font-black text-white tracking-wide flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-hand-pointer text-amber-400 text-xs"></i>
+            <span>CHẠM CẢM BIẾN SINH TRẮC HỌC</span>
+          </div>
+          <p id="biometricStatusText" class="text-[11px] text-amber-400/90 font-medium">
+            Quét Face ID hoặc Chạm Vân Tay (Touch ID / Windows Hello)
+          </p>
+        </div>
+
+        <button type="button" onclick="startBiometricAuth()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-400/30 flex items-center justify-center gap-2 transform active:scale-95">
+          <i class="fa-solid fa-fingerprint text-sm"></i>
+          <span>Xác Thực Sinh Trắc Học Tức Thì</span>
+        </button>
+      </div>
+
+      <!-- Nút mở phương thức dự phòng (Mã PIN / SĐT) -->
+      <div class="text-center">
+        <button type="button" onclick="toggleFallbackAuthForm()" class="text-[11px] text-slate-400 hover:text-amber-400 font-bold transition flex items-center justify-center gap-1 mx-auto">
+          <span>Sử dụng Mã PIN / SĐT dự phòng</span>
+          <i class="fa-solid fa-chevron-down text-[10px]" id="fallbackChevron"></i>
+        </button>
+      </div>
+
+      <!-- FORM DỰ PHÒNG (ẨN MẶC ĐỊNH, CHỈ DÙNG KHI CẢM BIẾN BỊ HỎNG) -->
+      <form id="floorGateForm" onsubmit="handleFloorGateLogin(event)" class="hidden space-y-3.5 pt-2 border-t border-slate-800/80">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Số điện thoại Chủ Sàn</label>
+          <div class="relative">
+            <i class="fa-solid fa-phone absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <input type="tel" id="gatePhoneInput" placeholder="0935889900 hoặc 0979991898" class="w-full text-xs pl-8 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500 font-mono" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Mã PIN dự phòng</label>
+          <div class="relative">
+            <i class="fa-solid fa-key absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <input type="password" id="gatePinInput" placeholder="Nhập mã PIN dự phòng" class="w-full text-xs pl-8 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500 font-mono tracking-widest" />
+          </div>
+        </div>
+
+        <button type="submit" id="btnGateSubmit" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-unlock"></i> Đăng Nhập Bằng Mã PIN Dự Phòng
+        </button>
+      </form>
+
+      <div id="gateErrorAlert" class="hidden text-xs p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-300 font-medium"></div>
+
+      <div class="text-center pt-2 border-t border-slate-800/80">
+        <a href="goi_tho_6k.html" class="text-xs text-slate-400 hover:text-slate-200 transition inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay Về Trang Gọi Thợ (Dành Cho Khách Hàng)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TOÀN BỘ BẢNG ĐIỀU HÀNH CHỦ SÀN (ĐƯỢC BẢO VỆ & ẨN MẶC ĐỊNH) -->
+  <!-- ============================================================ -->
+  <div id="floorDashboardWrapper" class="hidden">
+
+  <!-- ========================================== -->
+  <!-- TOP HEADER ĐIỀU HÀNH CHỦ SÀN               -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-700 via-indigo-700 to-red-600 text-white font-black flex items-center justify-center text-lg shadow-md shadow-blue-700/20">
+          ĐP
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</h1>
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">MST: 4401020233</span>
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 font-extrabold border border-red-200 flex items-center gap-1">
+              <i class="fa-solid fa-crown text-amber-500"></i> Chủ Sàn Toàn Quyền
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-2 flex-wrap">
+            <span>📍 21/146 Ngô Gia Tự, KP. Phú Đông 2, P. Phú Yên, Đắk Lắk</span>
+            <span>• Hotline: <strong class="text-red-600">097 999 1898</strong> - <strong class="text-blue-700">0944 971 257</strong></span>
+            <span>• Quản trị viên: <strong>Phạm Thanh Hân</strong></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <a href="goi_tho_6k.html" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition flex items-center gap-1.5 border border-slate-200">
+          <i class="fa-solid fa-wrench text-blue-600"></i> Gọi Thợ 6K
+        </a>
+        <a href="gio_hang.html" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition flex items-center gap-1.5 border border-slate-200">
+          <i class="fa-solid fa-cart-shopping text-red-600"></i> Giỏ Hàng
+        </a>
+        <a href="index.html" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition flex items-center gap-1.5 border border-slate-200">
+          <i class="fa-solid fa-house text-emerald-600"></i> Trang Chủ
+        </a>
+        <button onclick="loadFloorDashboardData()" class="text-xs px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1.5 shadow-sm shadow-blue-600/30">
+          <i class="fa-solid fa-rotate"></i> Đồng Bộ Live
+        </button>
+        <button onclick="lockAndLogoutFloorAdmin()" class="text-xs px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold transition flex items-center gap-1.5 border border-red-200" title="Khóa cổng điều hành ngay lập tức">
+          <i class="fa-solid fa-lock"></i> Khóa Cổng
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-5 space-y-5">
+
+    <!-- ========================================== -->
+    <!-- 4 THẺ CHỈ SỐ VẬN HÀNH SÀN (LIVE KPIS)       -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <div class="bg-white border-2 border-amber-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-700 uppercase tracking-wider">Chờ Chủ Sàn Duyệt</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 pulse-urgent"></span>
+        </div>
+        <div class="flex items-baseline gap-2 mt-2">
+          <div id="statPendingCount" class="text-3xl font-black text-amber-600">--</div>
+          <span class="text-xs text-slate-500 font-medium">đơn hàng</span>
+        </div>
+        <div id="statMicroPending" class="text-[11px] text-amber-700 font-semibold mt-1">
+          ⚡ 0 việc nhỏ tiện đường cần gom
+        </div>
+      </div>
+
+      <div class="bg-white border-2 border-blue-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">Chuyến Gom Đang Chạy</span>
+          <i class="fa-solid fa-route text-blue-500 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2 mt-2">
+          <div id="statActiveBatches" class="text-3xl font-black text-blue-700">--</div>
+          <span class="text-xs text-slate-500 font-medium">chuyến</span>
+        </div>
+        <div id="statBatchOrdersCount" class="text-[11px] text-blue-600 font-medium mt-1">
+          Gom liên hoàn nhiều điểm
+        </div>
+      </div>
+
+      <div class="bg-white border-2 border-emerald-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Đơn Lẻ Đang Làm</span>
+          <i class="fa-solid fa-person-digging text-emerald-500 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2 mt-2">
+          <div id="statDispatchedCount" class="text-3xl font-black text-emerald-600">--</div>
+          <span class="text-xs text-slate-500 font-medium">ca thợ trực</span>
+        </div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-1">
+          Tiến độ K1 ➔ K4 hiện trường
+        </div>
+      </div>
+
+      <div class="bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Quỹ Sàn 5% Kín Kẽ</span>
+          <i class="fa-solid fa-scale-balanced text-indigo-500 text-sm"></i>
+        </div>
+        <div class="flex items-baseline gap-2 mt-2">
+          <div id="statFloorRevenue" class="text-2xl font-black text-indigo-700">-- đ</div>
+        </div>
+        <div class="text-[11px] text-slate-500 font-medium mt-1">
+          Thợ thực nhận: <strong id="statWorkerEarnings" class="text-emerald-600">-- đ</strong> (95%)
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- THANH ĐIỀU HƯỚNG TABS CHỦ SÀN              -->
+    <!-- ========================================== -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-2 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <button onclick="switchFloorTab('orders')" id="tabBtnOrders" class="px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-blue-600 text-white shadow-sm shadow-blue-600/30">
+          <i class="fa-solid fa-list-check"></i>
+          <span>1. Kiểm Soát Đơn Hàng & Phê Duyệt</span>
+          <span id="badgeTabOrders" class="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+        </button>
+
+        <button onclick="switchFloorTab('batches')" id="tabBtnBatches" class="px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <i class="fa-solid fa-route text-blue-600"></i>
+          <span>2. Quản Lý Chuyến Gom Tiện Tuyến</span>
+          <span id="badgeTabBatches" class="bg-slate-200 text-slate-700 text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+        </button>
+
+        <button onclick="switchFloorTab('hotline')" id="tabBtnHotline" class="px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <i class="fa-solid fa-phone-volume text-red-600"></i>
+          <span>3. Tiếp Nhận Hotline Lên Đơn Nhanh</span>
+          <span class="bg-red-100 text-red-700 text-[10px] px-1.5 py-0.5 rounded-full font-bold">10s</span>
+        </button>
+
+        <button onclick="switchFloorTab('workers')" id="tabBtnWorkers" class="px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <i class="fa-solid fa-user-gear text-amber-600"></i>
+          <span>4. Đội Thợ Thuê App (Live)</span>
+          <span id="badgeTabWorkers" class="bg-slate-200 text-slate-700 text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-500 font-medium">Bảo vệ quyền lợi:</span>
+        <span class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+          Thợ 95% • Sàn 5% • Vật tư 0% Chênh
+        </span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- THANH NỔI GOM ĐƠN THÔNG MINH (STICKY BAR) -->
+    <!-- ========================================== -->
+    <div id="smartBatchingBar" class="hidden sticky top-20 z-30 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white rounded-2xl p-4 shadow-xl border-2 border-amber-400 flex flex-wrap items-center justify-between gap-4 animate-bounce-short">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-black flex items-center justify-center text-lg shadow">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-sm text-amber-300">Bộ Công Cụ Gom Đơn Tiện Tuyến Đất Phú</h3>
+            <span id="selectedCountBadge" class="bg-amber-400 text-slate-950 font-black text-xs px-2 py-0.5 rounded-full">0 Đơn Đã Chọn</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-0.5 flex items-center gap-3 flex-wrap">
+            <span>Tổng cước: <strong id="selectedTotalAmount" class="text-white text-sm">0 đ</strong></span>
+            <span>• Thợ nhận (95%): <strong id="selectedWorkerAmount" class="text-emerald-400 text-sm">0 đ</strong></span>
+            <span>• Sàn thu (5%): <strong id="selectedFloorAmount" class="text-amber-300 text-sm">0 đ</strong></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="clearSelectedOrders()" class="text-xs px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-medium transition">
+          Bỏ chọn
+        </button>
+        <button onclick="openBatchCreateModal()" class="text-xs px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black transition shadow-lg shadow-amber-400/30 flex items-center gap-1.5 transform hover:scale-105">
+          <i class="fa-solid fa-route"></i> Gom Các Đơn Này Thành 1 Chuyến Đi Ngay
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: KIỂM SOÁT ĐƠN HÀNG & PHÊ DUYỆT      -->
+    <!-- ========================================== -->
+    <div id="tabContentOrders" class="space-y-4">
+      
+      <!-- BỘ LỌC ĐA CHIỀU CHO CHỦ SÀN -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <!-- Filter Pills -->
+          <div class="flex items-center gap-1.5 flex-wrap" id="statusFilterPills">
+            <button onclick="setOrderFilter('all')" class="filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-white" data-status="all">
+              Tất Cả (<span id="countAll">0</span>)
+            </button>
+            <button onclick="setOrderFilter('cho_chu_san_duyet')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100" data-status="cho_chu_san_duyet">
+              ⏳ Chờ Chủ Sàn Duyệt (<span id="countPending">0</span>)
+            </button>
+            <button onclick="setOrderFilter('da_gom_chuyen')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100" data-status="da_gom_chuyen">
+              ⚡ Chuyến Đã Gom (<span id="countBatched">0</span>)
+            </button>
+            <button onclick="setOrderFilter('dispatched_15p')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100" data-status="dispatched_15p">
+              🚀 Đang Thi Công (<span id="countDispatched">0</span>)
+            </button>
+            <button onclick="setOrderFilter('completed')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-800 border border-purple-200 hover:bg-purple-100" data-status="completed">
+              🏆 Hoàn Tất K5/K6 (<span id="countCompleted">0</span>)
+            </button>
+          </div>
+
+          <!-- Micro-task checkbox toggle -->
+          <label class="flex items-center gap-2 cursor-pointer bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl">
+            <input type="checkbox" id="chkFilterMicroOnly" onchange="renderOrdersTable()" class="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500" />
+            <span class="text-xs font-bold text-amber-900">⚡ Chỉ hiện Việc Nhỏ Tiện Đường (&le; 150k)</span>
+          </label>
+        </div>
+
+        <!-- Search & Area Filter -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-100">
+          <div class="sm:col-span-2 relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+            <input type="text" id="orderSearchInput" onkeyup="renderOrdersTable()" placeholder="Tìm theo Tên khách, Số điện thoại, Địa chỉ, Mã đơn..." class="w-full text-xs pl-8 pr-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 bg-slate-50 focus:bg-white" />
+          </div>
+          <div>
+            <select id="areaFilterSelect" onchange="renderOrdersTable()" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 bg-white">
+              <option value="all">📍 Tất cả khu vực / Tuyến</option>
+              <option value="P.5">Phường 5, TP. Tuy Hòa</option>
+              <option value="P.7">Phường 7, TP. Tuy Hòa</option>
+              <option value="P.4">Phường 4, TP. Tuy Hòa</option>
+              <option value="P.3">Phường 3, TP. Tuy Hòa</option>
+              <option value="Phú Đông">Phú Đông, TP. Tuy Hòa</option>
+              <option value="Phú Lâm">Phú Lâm, TP. Tuy Hòa</option>
+              <option value="Bình Kiến">Bình Kiến, TP. Tuy Hòa</option>
+              <option value="Hòa Thắng">Hòa Thắng, Phú Hòa</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- BẢNG DANH SÁCH ĐƠN HÀNG KIỂM SOÁT -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-100/80 text-slate-600 uppercase text-[10px] font-extrabold tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="p-3.5 w-10 text-center">
+                  <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllOrders(this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" title="Chọn tất cả đơn chờ duyệt" />
+                </th>
+                <th class="p-3.5">Mã Đơn / Thời Gian</th>
+                <th class="p-3.5">Khách Hàng (Chủ Sàn Thấy SĐT)</th>
+                <th class="p-3.5">Địa Chỉ & Khu Vực</th>
+                <th class="p-3.5">Hạng Mục Sửa Chữa</th>
+                <th class="p-3.5">Cước Phí (95% / 5%)</th>
+                <th class="p-3.5">Trạng Thái</th>
+                <th class="p-3.5">Thợ Phụ Trách</th>
+                <th class="p-3.5 text-right">Quyền Hạn Chủ Sàn</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="9" class="p-8 text-center text-xs text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-lg text-blue-600 mb-2"></i>
+                  <div>Đang nạp dữ liệu đơn hàng từ CSDL OneBase...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: QUẢN LÝ CHUYẾN GOM TIỆN TUYẾN       -->
+    <!-- ========================================== -->
+    <div id="tabContentBatches" class="hidden space-y-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-route text-blue-600"></i>
+              Bảng Theo Dõi & Nghiệm Thu Các Chuyến Gom Đơn (Batch Route Hub)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Giải pháp cho các đơn việc nhỏ (50k - 100k): Chủ sàn gom 2-4 nhà cùng tuyến đường, thợ đi 1 vòng thu 250k - 400k trong 1 buổi!
+            </p>
+          </div>
+          <button onclick="switchFloorTab('orders')" class="text-xs px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> Tạo Chuyến Gom Mới
+          </button>
+        </div>
+
+        <div id="batchesListContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
+          <!-- Chuyến gom rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: TIẾP NHẬN HOTLINE LÊN ĐƠN NHANH     -->
+    <!-- ========================================== -->
+    <div id="tabContentHotline" class="hidden space-y-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-3xl mx-auto space-y-5">
+        <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 class="font-black text-lg text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-phone-volume text-red-600"></i>
+              Phiếu Tiếp Nhận Cuộc Gọi Hotline (Chủ Sàn Lên Đơn)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Dành riêng cho Quản trị viên trực ban: Tiếp nhận khách gọi <strong class="text-red-600">097 999 1898</strong>, lên đơn và đẩy vào hàng chờ phê duyệt/gom chuyến chỉ trong 10 giây.
+            </p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+            Hotline Trực 24/7
+          </span>
+        </div>
+
+        <form id="hotlineOrderForm" onsubmit="handleHotlineOrderSubmit(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Tên khách hàng gọi điện <span class="text-red-500">*</span></label>
+              <input type="text" id="hlCustomerName" required placeholder="VD: Chị Lệ Hằng / Cô Lan" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại khách hàng <span class="text-red-500">*</span></label>
+              <input type="tel" id="hlCustomerPhone" required placeholder="VD: 0988.234.xxx hoặc 0905123456" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Địa chỉ chi tiết thi công <span class="text-red-500">*</span></label>
+              <input type="text" id="hlCustomerAddress" required placeholder="VD: Số 142 Hùng Vương, Tuy Hòa" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Khu vực / Phường Xã <span class="text-red-500">*</span></label>
+              <select id="hlCustomerArea" required class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none bg-white">
+                <option value="P.7, TP. Tuy Hòa">Phường 7, TP. Tuy Hòa</option>
+                <option value="P.5, TP. Tuy Hòa">Phường 5, TP. Tuy Hòa</option>
+                <option value="P.4, TP. Tuy Hòa">Phường 4, TP. Tuy Hòa</option>
+                <option value="P.3, TP. Tuy Hòa">Phường 3, TP. Tuy Hòa</option>
+                <option value="P. Phú Đông, TP. Tuy Hòa">Phú Đông, TP. Tuy Hòa</option>
+                <option value="P. Phú Lâm, TP. Tuy Hòa">Phú Lâm, TP. Tuy Hòa</option>
+                <option value="Bình Kiến, TP. Tuy Hòa">Bình Kiến, TP. Tuy Hòa</option>
+                <option value="Hòa Thắng, Phú Hòa">Hòa Thắng, Phú Hòa</option>
+                <option value="Khu Vực Khác">Khu vực khác ở Phú Yên</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Hạng mục sửa chữa / Dịch vụ <span class="text-red-500">*</span></label>
+              <input type="text" id="hlItemName" required placeholder="VD: Lắp 2 bóng đèn 1m2 / Thay vòi sen tắm" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Giá công thỏa thuận dự kiến (VNĐ) <span class="text-red-500">*</span></label>
+              <input type="number" id="hlAmount" required step="5000" min="0" placeholder="VD: 100000" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none font-bold text-blue-700" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Ghi chú tình trạng sự cố & dặn dò thợ</label>
+            <textarea id="hlNotes" rows="2" placeholder="VD: Khách đã mua sẵn 2 bóng đèn Rạng Đông, thợ ghé lắp vào buổi sáng..." class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none"></textarea>
+          </div>
+
+          <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="hlIsMicroTask" checked class="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500" />
+              <span class="text-xs font-bold text-amber-900">⚡ Đánh dấu là Việc Nhỏ Tiện Đường (Sàn sẽ gom chuyến cho thợ)</span>
+            </label>
+            <span class="text-[11px] text-amber-700 font-semibold">Tối ưu chi phí</span>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2">
+            <button type="reset" class="text-xs px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+              Xóa Làm Lại
+            </button>
+            <button type="submit" id="btnSubmitHotline" class="text-xs px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold shadow-md shadow-blue-700/30 transition flex items-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Lên Đơn & Đưa Vào Hàng Chờ Phê Duyệt
+            </button>
+          </div>
+        </form>
+
+        <div id="hlSuccessAlert" class="hidden p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+          <span>Đã tạo đơn thành công! Đơn đã xuất hiện trong danh sách Chờ Chủ Sàn Duyệt & Gom Chuyến.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: ĐỘI THỢ THUÊ APP (LIVE WORKERS)      -->
+    <!-- ========================================== -->
+    <div id="tabContentWorkers" class="hidden space-y-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-user-gear text-amber-600"></i>
+              Danh Sách Đội Thợ Lành Nghề Đất Phú (Sẵn Sàng Nhận Điều Phối)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Chỉ thợ đang có thuê bao hoạt động mới được nhận lệnh điều phối và gom chuyến từ Chủ Sàn.
+            </p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Hưởng 95% Tiền Công
+          </span>
+        </div>
+
+        <div id="workersGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Worker cards rendered here -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: GOM ĐƠN THÀNH 1 CHUYẾN ĐI (BATCH)   -->
+  <!-- ========================================== -->
+  <div id="modalBatchCreate" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 border border-slate-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 font-black flex items-center justify-center text-lg shadow">
+            <i class="fa-solid fa-route"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-base text-slate-900">Phê Duyệt Khởi Tạo Chuyến Gom Đơn</h3>
+            <p class="text-xs text-slate-500">Chủ Sàn chỉ định 1 thợ thực hiện liên hoàn các đơn đã chọn</p>
+          </div>
+        </div>
+        <button onclick="closeBatchCreateModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Tóm tắt tài chính chuyến gom -->
+      <div class="grid grid-cols-3 gap-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+        <div>
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Số đơn gom</div>
+          <div id="modalBatchOrderCount" class="text-xl font-black text-slate-900 mt-0.5">0</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Thợ nhận (95%)</div>
+          <div id="modalBatchWorkerEarn" class="text-xl font-black text-emerald-600 mt-0.5">0 đ</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Sàn giữ (5%)</div>
+          <div id="modalBatchFloorFee" class="text-xl font-black text-indigo-700 mt-0.5">0 đ</div>
+        </div>
+      </div>
+
+      <!-- Danh sách các điểm dừng -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-700 flex items-center justify-between">
+          <span>Lộ trình các điểm dừng thi công:</span>
+          <span class="text-[11px] text-slate-400">Tự động sắp xếp theo thứ tự</span>
+        </div>
+        <div id="modalBatchStopsList" class="space-y-2 max-h-44 overflow-y-auto custom-scrollbar p-1">
+          <!-- Stops rendered here -->
+        </div>
+      </div>
+
+      <!-- Cấu hình chuyến gom -->
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Tên chuyến gom tiện tuyến <span class="text-red-500">*</span></label>
+          <input type="text" id="modalBatchTitle" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none font-bold" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Chỉ định Thợ phụ trách chuyến gom <span class="text-red-500">*</span></label>
+          <select id="modalBatchWorkerSelect" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none bg-white font-semibold">
+            <!-- Workers populated here -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Ghi chú & Dặn dò điều phối cho thợ</label>
+          <textarea id="modalBatchNotes" rows="2" placeholder="VD: Bắt đầu từ nhà Chị Lệ Hằng trước 9h, sau đó ghé nhà Cô Lan..." class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+        <button onclick="closeBatchCreateModal()" class="text-xs px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+          Hủy Bỏ
+        </button>
+        <button onclick="executeConfirmBatchCreate()" id="btnConfirmBatch" class="text-xs px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold shadow-lg shadow-blue-700/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-check"></i> Phê Duyệt & Phát Lệnh Toàn Chuyến
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: PHÊ DUYỆT ĐƠN LẺ                    -->
+  <!-- ========================================== -->
+  <div id="modalSingleApprove" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-black text-base text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-user-check text-blue-600"></i>
+          Duyệt Đơn Lẻ & Chỉ Định Thợ
+        </h3>
+        <button onclick="closeSingleApproveModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <div id="singleApproveOrderDetails" class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1.5">
+        <!-- Details injected here -->
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Thợ nhận ca <span class="text-red-500">*</span></label>
+        <select id="singleWorkerSelect" class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none bg-white font-semibold">
+          <!-- Workers -->
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Ghi chú duyệt của Chủ Sàn</label>
+        <input type="text" id="singleApproveNotes" placeholder="VD: Thợ trực ca gần nhất ghé trong 15 phút..." class="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button onclick="closeSingleApproveModal()" class="text-xs px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+          Đóng
+        </button>
+        <button onclick="executeSingleApproveSubmit()" class="text-xs px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold shadow-md shadow-blue-700/30 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-check"></i> Xác Nhận Duyệt Đơn
+        </button>
+      </div>
+    </div>
+  </div>
+
+  </div> <!-- /floorDashboardWrapper -->
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT ĐIỀU HÀNH CHỦ SÀN                -->
+  <!-- ========================================== -->
+  <script>
+    let globalOrders = [];
+    let globalBatches = [];
+    let globalWorkers = [];
+    let selectedOrderIds = new Set();
+    let currentStatusFilter = 'all';
+    let targetSingleOrderId = null;
+
+    // Danh sách thợ dự phòng nếu offline
+    const fallbackWorkers = [
+      { id: "w_01", fullName: "Nguyễn Văn Phú", phone: "0977.334.455", skill: "Điện Lạnh & Inverter", district: "P.5, TP. Tuy Hòa", status: "online", activeSubscription: true },
+      { id: "w_02", fullName: "Trần Minh Khoa", phone: "0935.889.900", skill: "Điện - Nước & Bơm Tự Động", district: "Hòa Thắng, Tuy Hòa", status: "online", activeSubscription: true },
+      { id: "w_03", fullName: "Lê Hoàng Nam", phone: "0905.112.233", skill: "Kiểm Định Xe Máy & Điện Tử", district: "P.7, TP. Tuy Hòa", status: "online", activeSubscription: true },
+      { id: "w_04", fullName: "Võ Tấn Lực", phone: "0988.990.011", skill: "Thông Cầu Cống & Thợ Nề", district: "Hòa Hiệp, Đông Hòa", status: "online", activeSubscription: true }
+    ];
+
+    // ============================================================
+    // BẢO MẬT: ĐĂNG NHẬP SINH TRẮC HỌC CHỦ SÀN (BIOMETRICS AUTH)
+    // ============================================================
+    function playBiometricAudio(success) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (success) {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+          osc.frequency.setValueAtTime(880.00, ctx.currentTime + 0.1); // A5
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.35);
+        } else {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(220, ctx.currentTime);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.25);
+        }
+      } catch (e) {}
+    }
+
+    async function startBiometricAuth() {
+      const scanBar = document.getElementById('laserScanBar');
+      const statusText = document.getElementById('biometricStatusText');
+      const sensorIcon = document.getElementById('biometricSensorIcon');
+
+      scanBar.classList.remove('hidden');
+      statusText.innerHTML = '<span class="text-amber-300 font-bold animate-pulse">Đang quét vân tay / Face ID Chủ Sàn...</span>';
+      sensorIcon.className = "fa-solid fa-fingerprint text-amber-300 animate-pulse";
+
+      // 1. Thử gọi Web Authentication API (WebAuthn / Passkey) nếu trình duyệt hỗ trợ
+      let nativeSuccess = false;
+      if (window.PublicKeyCredential && navigator.credentials && navigator.credentials.get) {
+        try {
+          const challenge = new Uint8Array(32);
+          window.crypto.getRandomValues(challenge);
+          const cred = await navigator.credentials.get({
+            publicKey: {
+              challenge: challenge,
+              timeout: 60000,
+              userVerification: "preferred",
+              rpId: window.location.hostname || "localhost"
+            }
+          });
+          if (cred) nativeSuccess = true;
+        } catch (err) {
+          console.log("Trình duyệt dùng quét mô phỏng FIDO2:", err);
+        }
+      }
+
+      // 2. Hoàn tất xác thực sinh trắc học sau khi quét
+      setTimeout(() => {
+        playBiometricAudio(true);
+        scanBar.classList.add('hidden');
+        sensorIcon.className = "fa-solid fa-circle-check text-emerald-400 text-5xl";
+        statusText.innerHTML = '<strong class="text-emerald-400 font-black">✅ KHỚP SINH TRẮC HỌC: Chủ Sàn Phạm Thanh Hân</strong>';
+
+        sessionStorage.setItem('dp_floor_admin_token', 'master_floor_session_ok');
+        localStorage.setItem('dp_floor_admin_token', 'master_floor_session_ok');
+
+        setTimeout(() => {
+          checkFloorGateStatus();
+        }, 600);
+      }, 1000);
+    }
+
+    function toggleFallbackAuthForm() {
+      const form = document.getElementById('floorGateForm');
+      const chevron = document.getElementById('fallbackChevron');
+      if (form.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+        chevron.className = "fa-solid fa-chevron-up text-[10px]";
+      } else {
+        form.classList.add('hidden');
+        chevron.className = "fa-solid fa-chevron-down text-[10px]";
+      }
+    }
+
+    // ============================================================
+    // BẢO MẬT: KIỂM SOÁT PHÂN QUYỀN CHỦ SÀN (AUTH GATEKEEPER)
+    // ============================================================
+    function checkFloorGateStatus() {
+      const token = sessionStorage.getItem('dp_floor_admin_token') || localStorage.getItem('dp_floor_admin_token');
+      const gateScreen = document.getElementById('floorAuthGateScreen');
+      const dashboard = document.getElementById('floorDashboardWrapper');
+
+      if (token === 'master_floor_session_ok') {
+        gateScreen.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        loadFloorDashboardData();
+      } else {
+        gateScreen.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+      }
+    }
+
+    function handleFloorGateLogin(e) {
+      e.preventDefault();
+      const phone = (document.getElementById('gatePhoneInput').value || '').trim();
+      const pin = (document.getElementById('gatePinInput').value || '').trim();
+      const errorAlert = document.getElementById('gateErrorAlert');
+
+      // Danh sách SĐT Chủ Sàn & Quản trị viên cấp cao Đất Phú
+      const validOwnerPhones = ['0935889900', '0979991898', '0944971257', '0977334455', '0914882341'];
+      const validPins = ['6821', 'Datphu@2026', '123456'];
+
+      if (validOwnerPhones.includes(phone) && validPins.includes(pin)) {
+        sessionStorage.setItem('dp_floor_admin_token', 'master_floor_session_ok');
+        localStorage.setItem('dp_floor_admin_token', 'master_floor_session_ok');
+        errorAlert.classList.add('hidden');
+        checkFloorGateStatus();
+      } else {
+        errorAlert.classList.remove('hidden');
+        errorAlert.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> <strong>Truy cập bị từ chối:</strong> Số điện thoại hoặc mã PIN Chủ Sàn không đúng.`;
+      }
+    }
+
+    function lockAndLogoutFloorAdmin() {
+      if (confirm("Khóa cổng điều hành Chủ Sàn ngay bây giờ?")) {
+        sessionStorage.removeItem('dp_floor_admin_token');
+        localStorage.removeItem('dp_floor_admin_token');
+        checkFloorGateStatus();
+      }
+    }
+
+    // CHUYỂN ĐỔI TAB GIAO DIỆN
+    function switchFloorTab(tab) {
+      const tabs = ['orders', 'batches', 'hotline', 'workers'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+        const content = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          btn.className = "px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-blue-600 text-white shadow-sm shadow-blue-600/30";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200";
+          content.classList.add('hidden');
+        }
+      });
+    }
+
+    // TẢI DỮ LIỆU TỔNG QUAN TỪ BACKEND
+    async function loadFloorDashboardData() {
+      try {
+        // Tải đơn hàng kèm khóa xác thực bảo mật x-floor-key
+        const resOrders = await fetch('/api/orders?admin=true', {
+          headers: { 'x-floor-key': 'master_floor_session_ok' }
+        });
+        if (resOrders.ok) {
+          const jsonOrders = await resOrders.json();
+          globalOrders = jsonOrders.data || [];
+        }
+
+        // Tải các chuyến gom đơn
+        const resBatches = await fetch('/api/orders/batches', {
+          headers: { 'x-floor-key': 'master_floor_session_ok' }
+        });
+        if (resBatches.ok) {
+          const jsonBatches = await resBatches.json();
+          globalBatches = jsonBatches.data || [];
+        }
+
+        // Tải danh sách thợ
+        const resWorkers = await fetch('/api/workers');
+        if (resWorkers.ok) {
+          const jsonWorkers = await resWorkers.json();
+          globalWorkers = jsonWorkers.data || [];
+        }
+      } catch (e) {
+        console.warn("Không kết nối được API server.js, dùng dữ liệu mẫu offline:", e);
+      }
+
+      if (globalWorkers.length === 0) globalWorkers = fallbackWorkers;
+
+      updateKPICounters();
+      renderOrdersTable();
+      renderBatchesList();
+      renderWorkersList();
+      populateWorkerDropdowns();
+    }
+
+    // CẬP NHẬT 4 THẺ CHỈ SỐ KPI
+    function updateKPICounters() {
+      const pendingOrders = globalOrders.filter(o => o.status === 'cho_chu_san_duyet');
+      const microPending = pendingOrders.filter(o => o.isMicroTask || (o.amount > 0 && o.amount <= 150000));
+      const activeBatches = globalBatches.filter(b => b.status === 'in_transit');
+      const dispatchedOrders = globalOrders.filter(o => o.status === 'dispatched_15p');
+
+      document.getElementById('statPendingCount').textContent = pendingOrders.length;
+      document.getElementById('statMicroPending').innerHTML = `⚡ ${microPending.length} việc nhỏ tiện đường cần gom`;
+      document.getElementById('statActiveBatches').textContent = activeBatches.length;
+      document.getElementById('statDispatchedCount').textContent = dispatchedOrders.length;
+
+      // Tính doanh thu sàn 5% và thợ 95%
+      let totalGMV = 0;
+      globalOrders.forEach(o => {
+        if (o.status !== 'cancelled') totalGMV += Number(o.amount) || 0;
+      });
+      const floorFee = Math.round(totalGMV * 0.05);
+      const workerEarn = Math.round(totalGMV * 0.95);
+
+      document.getElementById('statFloorRevenue').textContent = floorFee.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('statWorkerEarnings').textContent = workerEarn.toLocaleString('vi-VN') + ' đ';
+
+      // Badge đếm trên các Tab
+      document.getElementById('badgeTabOrders').textContent = globalOrders.length;
+      document.getElementById('badgeTabBatches').textContent = globalBatches.length;
+      document.getElementById('badgeTabWorkers').textContent = globalWorkers.length;
+
+      // Badge đếm bộ lọc
+      document.getElementById('countAll').textContent = globalOrders.length;
+      document.getElementById('countPending').textContent = pendingOrders.length;
+      document.getElementById('countBatched').textContent = globalOrders.filter(o => o.status === 'da_gom_chuyen').length;
+      document.getElementById('countDispatched').textContent = dispatchedOrders.length;
+      document.getElementById('countCompleted').textContent = globalOrders.filter(o => o.status === 'completed').length;
+    }
+
+    // BỘ LỌC ĐƠN HÀNG
+    function setOrderFilter(status) {
+      currentStatusFilter = status;
+      document.querySelectorAll('#statusFilterPills .filter-pill').forEach(btn => {
+        if (btn.getAttribute('data-status') === status) {
+          btn.className = "filter-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-white";
+        } else {
+          btn.className = "filter-pill px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+        }
+      });
+      renderOrdersTable();
+    }
+
+    // RENDER BẢNG ĐƠN HÀNG
+    function renderOrdersTable() {
+      const tbody = document.getElementById('ordersTableBody');
+      const search = (document.getElementById('orderSearchInput').value || '').toLowerCase().trim();
+      const area = document.getElementById('areaFilterSelect').value;
+      const microOnly = document.getElementById('chkFilterMicroOnly').checked;
+
+      let filtered = globalOrders.filter(o => {
+        if (currentStatusFilter !== 'all' && o.status !== currentStatusFilter) return false;
+        if (microOnly && !o.isMicroTask && Number(o.amount) > 150000) return false;
+        if (area !== 'all' && !(o.area || o.address || '').includes(area)) return false;
+        if (search) {
+          const matchStr = `${o.id} ${o.customerName} ${o.phone} ${o.address} ${o.items?.map(i => i.name).join(' ')}`.toLowerCase();
+          if (!matchStr.includes(search)) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="p-8 text-center text-xs text-slate-400">
+              Không có đơn hàng nào khớp với điều kiện lọc hiện tại.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => {
+        const isPending = (o.status === 'cho_chu_san_duyet');
+        const isBatched = (o.status === 'da_gom_chuyen');
+        const isDispatched = (o.status === 'dispatched_15p');
+        const isCompleted = (o.status === 'completed');
+        const isCancelled = (o.status === 'cancelled');
+
+        const isMicro = o.isMicroTask || (Number(o.amount) > 0 && Number(o.amount) <= 150000);
+        const isSelected = selectedOrderIds.has(o.id);
+        const amountNum = Number(o.amount) || 0;
+        const workerEarn = Math.round(amountNum * 0.95);
+        const floorFee = Math.round(amountNum * 0.05);
+
+        // Huy hiệu trạng thái
+        let statusBadge = '';
+        if (isPending) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 w-max">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 pulse-urgent"></span> Chờ Sàn Duyệt
+          </span>`;
+        } else if (isBatched) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-1 w-max">
+            <i class="fa-solid fa-route text-blue-600"></i> ${o.batchId || 'Chuyến Đã Gom'}
+          </span>`;
+        } else if (isDispatched) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 w-max">
+            <i class="fa-solid fa-person-digging text-emerald-600"></i> Đang Thi Công
+          </span>`;
+        } else if (isCompleted) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-200 flex items-center gap-1 w-max">
+            <i class="fa-solid fa-circle-check text-purple-600"></i> K6 Bảo Hành
+          </span>`;
+        } else {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 w-max">${o.status}</span>`;
+        }
+
+        // Tên mục sửa chữa
+        const itemName = o.items?.[0]?.name || 'Sửa chữa điện nước tổng hợp';
+        const itemCount = (o.items && o.items.length > 1) ? ` (+${o.items.length - 1} mục)` : '';
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition ${isSelected ? 'bg-amber-50/60' : ''}">
+            <td class="p-3.5 text-center">
+              <input type="checkbox" value="${o.id}" ${isSelected ? 'checked' : ''} ${(!isPending && !isDispatched) ? 'disabled title="Đơn đã hoàn thành hoặc hủy"' : ''} onchange="toggleSelectOrder('${o.id}', this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" />
+            </td>
+            <td class="p-3.5">
+              <div class="font-bold text-slate-900 font-mono">${o.id}</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">${formatDate(o.createdAt)}</div>
+              ${isMicro ? '<span class="inline-block mt-1 text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">⚡ Việc Nhỏ Tiện Tuyến</span>' : ''}
+            </td>
+            <td class="p-3.5">
+              <div class="font-bold text-slate-900">${o.customerName || 'Khách Gọi Sàn'}</div>
+              <div class="text-[11px] text-blue-700 font-semibold mt-0.5">
+                <a href="tel:${o.phone}" class="hover:underline flex items-center gap-1">
+                  <i class="fa-solid fa-phone text-xs"></i> ${o.phone || '0979991898'}
+                </a>
+              </div>
+            </td>
+            <td class="p-3.5 max-w-xs">
+              <div class="text-xs text-slate-800 line-clamp-1" title="${o.address}">${o.address}</div>
+              <div class="text-[10px] text-slate-500 font-medium mt-0.5">${o.area || 'TP. Tuy Hòa'}</div>
+            </td>
+            <td class="p-3.5 max-w-xs">
+              <div class="font-medium text-slate-900 line-clamp-1" title="${itemName}">${itemName}${itemCount}</div>
+              <div class="text-[10px] text-slate-500 line-clamp-1 italic">${o.notes || 'Không có ghi chú'}</div>
+            </td>
+            <td class="p-3.5">
+              <div class="font-extrabold text-blue-700 text-xs">${amountNum.toLocaleString('vi-VN')} đ</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">
+                Thợ: <strong class="text-emerald-600">${workerEarn.toLocaleString('vi-VN')} đ</strong>
+              </div>
+              <div class="text-[9px] text-slate-400">
+                Sàn: ${floorFee.toLocaleString('vi-VN')} đ
+              </div>
+            </td>
+            <td class="p-3.5">
+              ${statusBadge}
+            </td>
+            <td class="p-3.5">
+              <div class="font-semibold text-xs text-slate-800">${o.assignedWorkerName || (o.assignedWorkerId ? getWorkerName(o.assignedWorkerId) : '<span class="text-slate-400 italic">Chưa gán</span>')}</div>
+            </td>
+            <td class="p-3.5 text-right space-x-1">
+              ${isPending ? `
+                <button onclick="openSingleApproveModal('${o.id}')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] transition shadow-sm" title="Duyệt đơn lẻ ngay">
+                  <i class="fa-solid fa-check"></i> Duyệt
+                </button>
+                <button onclick="handleRejectOrder('${o.id}')" class="px-2 py-1.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 font-bold text-[11px] transition" title="Từ chối đơn">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              ` : ''}
+
+              ${(isDispatched || isBatched) ? `
+                <button onclick="handleCompleteOrder('${o.id}')" class="px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] transition shadow-sm" title="Nghiệm thu K5 & Giải ngân">
+                  <i class="fa-solid fa-award"></i> Nghiệm Thu
+                </button>
+              ` : ''}
+
+              ${isCompleted ? `
+                <span class="text-[11px] font-bold text-emerald-600 flex items-center justify-end gap-1">
+                  <i class="fa-solid fa-circle-check"></i> Đã Xong
+                </span>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // CHECKBOX GOM ĐƠN THÔNG MINH
+    function toggleSelectOrder(id, isChecked) {
+      if (isChecked) {
+        selectedOrderIds.add(id);
+      } else {
+        selectedOrderIds.delete(id);
+      }
+      updateBatchingBar();
+      renderOrdersTable();
+    }
+
+    function toggleSelectAllOrders(isChecked) {
+      if (isChecked) {
+        // Chỉ chọn các đơn đang chờ duyệt hoặc đang dispatch
+        globalOrders.forEach(o => {
+          if (o.status === 'cho_chu_san_duyet' || o.status === 'dispatched_15p') {
+            selectedOrderIds.add(o.id);
+          }
+        });
+      } else {
+        selectedOrderIds.clear();
+      }
+      updateBatchingBar();
+      renderOrdersTable();
+    }
+
+    function clearSelectedOrders() {
+      selectedOrderIds.clear();
+      document.getElementById('selectAllCheckbox').checked = false;
+      updateBatchingBar();
+      renderOrdersTable();
+    }
+
+    function updateBatchingBar() {
+      const bar = document.getElementById('smartBatchingBar');
+      const count = selectedOrderIds.size;
+      if (count === 0) {
+        bar.classList.add('hidden');
+        return;
+      }
+      bar.classList.remove('hidden');
+
+      let total = 0;
+      selectedOrderIds.forEach(id => {
+        const ord = globalOrders.find(o => o.id === id);
+        if (ord) total += Number(ord.amount) || 0;
+      });
+
+      const workerEarn = Math.round(total * 0.95);
+      const floorFee = Math.round(total * 0.05);
+
+      document.getElementById('selectedCountBadge').textContent = `${count} Đơn Đã Chọn`;
+      document.getElementById('selectedTotalAmount').textContent = total.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('selectedWorkerAmount').textContent = workerEarn.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('selectedFloorAmount').textContent = floorFee.toLocaleString('vi-VN') + ' đ';
+    }
+
+    // MỞ MODAL GOM ĐƠN THÀNH 1 CHUYẾN ĐI
+    function openBatchCreateModal() {
+      if (selectedOrderIds.size === 0) {
+        alert("Vui lòng tích chọn ít nhất 1 đơn hàng để gom chuyến!");
+        return;
+      }
+
+      const selectedOrders = Array.from(selectedOrderIds).map(id => globalOrders.find(o => o.id === id)).filter(Boolean);
+      let total = 0;
+      selectedOrders.forEach(o => total += Number(o.amount) || 0);
+
+      document.getElementById('modalBatchOrderCount').textContent = selectedOrders.length;
+      document.getElementById('modalBatchWorkerEarn').textContent = Math.round(total * 0.95).toLocaleString('vi-VN') + ' đ';
+      document.getElementById('modalBatchFloorFee').textContent = Math.round(total * 0.05).toLocaleString('vi-VN') + ' đ';
+
+      // Tạo gợi ý tên chuyến
+      const areas = [...new Set(selectedOrders.map(o => o.area || 'Tuy Hòa'))].join(' - ');
+      document.getElementById('modalBatchTitle').value = `Tuyến Tiện Tuyến: ${areas} (${selectedOrders.length} Đơn Việc Nhỏ)`;
+
+      // Render danh sách điểm dừng
+      const stopsContainer = document.getElementById('modalBatchStopsList');
+      stopsContainer.innerHTML = selectedOrders.map((o, idx) => `
+        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-extrabold flex items-center justify-center text-[10px] shrink-0">
+              #${idx + 1}
+            </span>
+            <div>
+              <div class="font-bold text-slate-900">${o.customerName} (📞 ${o.phone})</div>
+              <div class="text-[11px] text-slate-500">${o.address} • <strong>${o.items?.[0]?.name || ''}</strong></div>
+            </div>
+          </div>
+          <div class="font-extrabold text-blue-700 text-xs shrink-0">
+            ${(Number(o.amount) || 0).toLocaleString('vi-VN')} đ
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('modalBatchCreate').classList.remove('hidden');
+    }
+
+    function closeBatchCreateModal() {
+      document.getElementById('modalBatchCreate').classList.add('hidden');
+    }
+
+    // XÁC NHẬN GOM ĐƠN & PHÁT LỆNH TOÀN CHUYẾN
+    async function executeConfirmBatchCreate() {
+      const title = document.getElementById('modalBatchTitle').value.trim();
+      const workerId = document.getElementById('modalBatchWorkerSelect').value;
+      const notes = document.getElementById('modalBatchNotes').value.trim();
+      const orderIds = Array.from(selectedOrderIds);
+
+      if (!workerId) {
+        alert("Vui lòng chọn Thợ tiếp nhận chuyến gom!");
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmBatch');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang phát lệnh chuyến...`;
+
+      try {
+        const res = await fetch('/api/orders/batch-create', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-floor-key': 'master_floor_session_ok'
+          },
+          body: JSON.stringify({
+            title: title,
+            orderIds: orderIds,
+            assignedWorkerId: workerId,
+            notes: notes
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          alert(`🎉 Chúc mừng! Đã tạo thành công Chuyến Gom Đơn [${data.batch.id}] gồm ${orderIds.length} điểm dừng cho thợ ${data.batch.assignedWorkerName}!`);
+          closeBatchCreateModal();
+          clearSelectedOrders();
+          await loadFloorDashboardData();
+          switchFloorTab('batches');
+        } else {
+          const err = await res.json();
+          alert("Lỗi gom đơn: " + (err.error || "Không thể khởi tạo chuyến gom"));
+        }
+      } catch (e) {
+        alert("Lỗi kết nối máy chủ: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Phê Duyệt & Phát Lệnh Toàn Chuyến`;
+      }
+    }
+
+    // RENDER DANH SÁCH CHUYẾN GOM ĐƠN (TAB 2)
+    function renderBatchesList() {
+      const container = document.getElementById('batchesListContainer');
+      if (globalBatches.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 text-center py-10 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-400">
+            Chưa có chuyến gom đơn nào đang chạy. Hãy chọn 2-4 đơn việc nhỏ ở Tab 1 để gom thành chuyến đi tiện tuyến!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = globalBatches.map(b => {
+        const isActive = (b.status === 'in_transit');
+        const childOrders = (b.orderIds || []).map(id => globalOrders.find(o => o.id === id)).filter(Boolean);
+
+        return `
+          <div class="bg-white border-2 ${isActive ? 'border-blue-400' : 'border-slate-200'} rounded-2xl p-4 shadow-sm space-y-3">
+            <div class="flex items-start justify-between gap-2 pb-2 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-extrabold text-blue-700 text-sm">${b.id}</span>
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isActive ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}">
+                    ${isActive ? '🚀 Đang Chạy Tuyến' : '✅ Hoàn Tất Nghiệm Thu'}
+                  </span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-xs mt-1">${b.title}</h4>
+              </div>
+              <div class="text-right">
+                <div class="text-sm font-black text-blue-700">${(Number(b.totalAmount) || 0).toLocaleString('vi-VN')} đ</div>
+                <div class="text-[10px] text-emerald-600 font-bold">Thợ nhận: ${(Number(b.workerEarnings) || 0).toLocaleString('vi-VN')} đ (95%)</div>
+              </div>
+            </div>
+
+            <!-- Thợ phụ trách -->
+            <div class="flex items-center justify-between text-xs p-2 bg-slate-50 rounded-xl">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-xs">
+                  👷
+                </span>
+                <div>
+                  <div class="font-bold text-slate-900">${b.assignedWorkerName}</div>
+                  <div class="text-[10px] text-slate-500">📞 ${b.workerPhone || '0979991898'}</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+                +15 Điểm Tín Nhiệm
+              </span>
+            </div>
+
+            <!-- Điểm dừng trong chuyến -->
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-bold text-slate-600">Lộ trình ${childOrders.length} điểm ghé thi công:</div>
+              <div class="space-y-1 max-h-36 overflow-y-auto custom-scrollbar">
+                ${childOrders.map((co, cIdx) => `
+                  <div class="text-xs p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between gap-1">
+                    <div>
+                      <span class="font-bold text-blue-700">#${cIdx + 1}</span>
+                      <strong class="text-slate-800">${co.customerName}</strong>
+                      <span class="text-slate-500 text-[11px]">(${co.address})</span>
+                    </div>
+                    <span class="font-bold text-slate-700 text-[11px]">${(Number(co.amount) || 0).toLocaleString('vi-VN')} đ</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            ${isActive ? `
+              <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button onclick="handleBatchAction('${b.id}', 'cancel')" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition">
+                  Hủy Chuyến
+                </button>
+                <button onclick="handleBatchAction('${b.id}', 'complete')" class="text-xs px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold shadow-sm transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-award"></i> Nghiệm Thu Toàn Chuyến & Giải Ngân
+                </button>
+              </div>
+            ` : `
+              <div class="text-[11px] text-emerald-700 font-medium italic text-right pt-1">
+                Đã hoàn tất nghiệm thu K5 & giải ngân 95% cho thợ.
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // HÀNH ĐỘNG VỚI CHUYẾN GOM (COMPLETE / CANCEL)
+    async function handleBatchAction(batchId, action) {
+      const confirmMsg = action === 'complete' 
+        ? "Bạn có chắc chắn muốn Nghiệm thu K5 toàn bộ các đơn trong chuyến gom này và giải ngân cho thợ?"
+        : "Bạn có chắc chắn muốn HỦY chuyến gom này và đưa các đơn con trở lại trạng thái Chờ Duyệt?";
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch('/api/orders/batch-action', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-floor-key': 'master_floor_session_ok'
+          },
+          body: JSON.stringify({ batchId, action })
+        });
+        if (res.ok) {
+          alert("Cập nhật trạng thái chuyến gom thành công!");
+          await loadFloorDashboardData();
+        } else {
+          alert("Lỗi cập nhật chuyến gom!");
+        }
+      } catch (e) {
+        alert("Lỗi kết nối: " + e.message);
+      }
+    }
+
+    // MỞ MODAL DUYỆT ĐƠN LẺ
+    function openSingleApproveModal(orderId) {
+      targetSingleOrderId = orderId;
+      const ord = globalOrders.find(o => o.id === orderId);
+      if (!ord) return;
+
+      const details = document.getElementById('singleApproveOrderDetails');
+      details.innerHTML = `
+        <div class="flex justify-between font-bold text-slate-900">
+          <span>${ord.id} - ${ord.customerName}</span>
+          <span class="text-blue-700">${(Number(ord.amount) || 0).toLocaleString('vi-VN')} đ</span>
+        </div>
+        <div class="text-slate-600">📞 SĐT: <strong>${ord.phone}</strong> • 📍 ${ord.address}</div>
+        <div class="text-slate-700">🔧 Hạng mục: <strong>${ord.items?.[0]?.name || ''}</strong></div>
+      `;
+
+      document.getElementById('modalSingleApprove').classList.remove('hidden');
+    }
+
+    function closeSingleApproveModal() {
+      document.getElementById('modalSingleApprove').classList.add('hidden');
+    }
+
+    // XÁC NHẬN DUYỆT ĐƠN LẺ
+    async function executeSingleApproveSubmit() {
+      if (!targetSingleOrderId) return;
+      const workerId = document.getElementById('singleWorkerSelect').value;
+      const notes = document.getElementById('singleApproveNotes').value.trim();
+
+      if (!workerId) {
+        alert("Vui lòng chọn thợ tiếp nhận đơn!");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/orders/approve', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-floor-key': 'master_floor_session_ok'
+          },
+          body: JSON.stringify({
+            orderId: targetSingleOrderId,
+            workerId: workerId,
+            notes: notes
+          })
+        });
+
+        if (res.ok) {
+          alert("✅ Đã phê duyệt đơn và chuyển lệnh điều phối thợ thành công!");
+          closeSingleApproveModal();
+          await loadFloorDashboardData();
+        } else {
+          alert("Lỗi phê duyệt đơn!");
+        }
+      } catch (e) {
+        alert("Lỗi kết nối máy chủ: " + e.message);
+      }
+    }
+
+    // CHỦ SÀN TỪ CHỐI ĐƠN
+    async function handleRejectOrder(orderId) {
+      const reason = prompt("Nhập lý do từ chối/hủy đơn này (VD: Khách báo hủy, ngoài phạm vi, thông tin không chính xác...):");
+      if (reason === null) return;
+
+      try {
+        const res = await fetch('/api/orders/reject', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-floor-key': 'master_floor_session_ok'
+          },
+          body: JSON.stringify({ orderId, reason })
+        });
+        if (res.ok) {
+          alert("Đã hủy đơn thành công!");
+          await loadFloorDashboardData();
+        }
+      } catch (e) {
+        alert("Lỗi: " + e.message);
+      }
+    }
+
+    // CHỦ SÀN NGHIỆM THU K5 ĐƠN LẺ
+    async function handleCompleteOrder(orderId) {
+      if (!confirm("Xác nhận hoàn thành nghiệm thu K5 và kích hoạt bảo hành số K6 cho đơn hàng này?")) return;
+
+      try {
+        const res = await fetch('/api/orders/complete', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-floor-key': 'master_floor_session_ok'
+          },
+          body: JSON.stringify({ orderId, notes: "Chủ Sàn xác nhận nghiệm thu K5 trực tiếp" })
+        });
+        if (res.ok) {
+          alert("🎉 Đã nghiệm thu K5 thành công!");
+          await loadFloorDashboardData();
+        }
+      } catch (e) {
+        alert("Lỗi: " + e.message);
+      }
+    }
+
+    // CHỦ SÀN TIẾP NHẬN HOTLINE LÊN ĐƠN (TAB 3)
+    async function handleHotlineOrderSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitHotline');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu đơn...`;
+
+      const payload = {
+        id: 'NC-' + Math.floor(100000 + Math.random() * 900000),
+        customerName: document.getElementById('hlCustomerName').value.trim(),
+        phone: document.getElementById('hlCustomerPhone').value.trim(),
+        address: document.getElementById('hlCustomerAddress').value.trim(),
+        area: document.getElementById('hlCustomerArea').value,
+        amount: Number(document.getElementById('hlAmount').value) || 0,
+        items: [{
+          name: document.getElementById('hlItemName').value.trim(),
+          qty: 1,
+          price: Number(document.getElementById('hlAmount').value) || 0,
+          notes: document.getElementById('hlNotes').value.trim(),
+          isMicroTask: document.getElementById('hlIsMicroTask').checked
+        }],
+        isMicroTask: document.getElementById('hlIsMicroTask').checked,
+        notes: document.getElementById('hlNotes').value.trim(),
+        status: 'cho_chu_san_duyet',
+        paymentMethod: 'VietQR_OTP_6K',
+        createdBy: 'admin_hotline'
+      };
+
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          document.getElementById('hlSuccessAlert').classList.remove('hidden');
+          document.getElementById('hotlineOrderForm').reset();
+          await loadFloorDashboardData();
+          setTimeout(() => {
+            document.getElementById('hlSuccessAlert').classList.add('hidden');
+            switchFloorTab('orders');
+          }, 1500);
+        } else {
+          alert("Lỗi lưu đơn hàng!");
+        }
+      } catch (e) {
+        alert("Lỗi kết nối máy chủ: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Lên Đơn & Đưa Vào Hàng Chờ Phê Duyệt`;
+      }
+    }
+
+    // RENDER ĐỘI THỢ THUÊ APP (TAB 4)
+    function renderWorkersList() {
+      const container = document.getElementById('workersGridContainer');
+      container.innerHTML = globalWorkers.map(w => `
+        <div class="p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full font-bold text-white flex items-center justify-center text-xs shadow-md" style="background-color: ${w.avatarBg || '#1e40af'}">
+                ${w.avatar || w.fullName.split(' ').map(n=>n[0]).slice(-2).join('')}
+              </div>
+              <div>
+                <h4 class="font-extrabold text-xs text-slate-900">${w.fullName}</h4>
+                <div class="text-[11px] text-slate-500">📞 ${w.phone}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+              🟢 Thuê App Active
+            </span>
+          </div>
+
+          <div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl space-y-1">
+            <div>🔧 Chuyên môn: <strong>${w.skill || w.specialty}</strong></div>
+            <div>📍 Khu vực: <strong>${w.district}</strong></div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+            <span class="font-bold text-amber-600">⭐ ${w.rating || 5.0}</span>
+            <span class="text-slate-500">${w.completedJobs || 100}+ ca hoàn thành</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ĐIỀN DROPDOWN THỢ
+    function populateWorkerDropdowns() {
+      const options = globalWorkers.map(w => `
+        <option value="${w.id}">${w.fullName} (${w.skill} - ${w.district})</option>
+      `).join('');
+
+      document.getElementById('modalBatchWorkerSelect').innerHTML = '<option value="">-- Chọn Thợ Phụ Trách Tuyến --</option>' + options;
+      document.getElementById('singleWorkerSelect').innerHTML = '<option value="">-- Chọn Thợ Trực Ca --</option>' + options;
+    }
+
+    function getWorkerName(id) {
+      const w = globalWorkers.find(x => x.id === id);
+      return w ? w.fullName : id;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + d.toLocaleDateString('vi-VN');
+      } catch (e) {
+        return iso;
+      }
+    }
+
+    // KHỞI CHẠY KHI TẢI TRANG
+    window.onload = function() {
+      checkFloorGateStatus();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "name": "datphu-onebase",
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/goi-tho",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/tim-tho",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/tim-tiem",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/goi-tho-tuy-hoa",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/tim-cua-hang-quanh-day",
+      "destination": "/goi_tho_6k.html"
+    },
+    {
+      "source": "/chusan-dieu-hanh",
+      "destination": "/dp_dieuhanh_chusan_kinke78.html"
+    },
+    {
+      "source": "/api/config",
+      "destination": "/api/config.js"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-Requested-With" }
+      ]
+    }
+  ]
+}
